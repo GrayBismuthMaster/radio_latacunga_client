@@ -1,11 +1,11 @@
-import styles from './userStyles/index.module.css';
+import styles from './componenteStyles/index.module.css';
 import { Toaster} from 'react-hot-toast'
-import Modal from '../../../Modal/Modal';
+import Modal from '../../components/Modal/Modal';
 import { useLocation} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { users } from '../../../../redux/actions';
-const  deleteUser = users.deleteUser
-const DeleteUser = ({deleteUser }:any) => {
+import { componentes } from '../../redux/actions';
+const  deleteComponente = componentes.deleteComponente
+const DeleteComponente = ({deleteComponente }:any) => {
     
     const location = useLocation();
     //const params = useParams();
@@ -18,7 +18,7 @@ const DeleteUser = ({deleteUser }:any) => {
             <p>¿Estás seguro de eliminar el usuario {nombre}</p>
             <div className = {styles.buttonContainer}>
                 <button onClick = {() => {
-                    deleteUser(_id)
+                    deleteComponente(_id)
                 }}
                 
                 className = {styles.deleteButton}
@@ -33,5 +33,5 @@ const DeleteUser = ({deleteUser }:any) => {
 };
 export default connect(
     null,
-    {deleteUser}
-)(DeleteUser)
+    {deleteComponente}
+)(DeleteComponente)

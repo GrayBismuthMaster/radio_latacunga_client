@@ -30,8 +30,13 @@ const userPersistConfig = {
 
 
 const rootReducer = combineReducers({
-  users: reducers.usersReducer ,
   auth : persistReducer(userPersistConfig, reducers.authReducer),
+  users: reducers.usersReducer ,
+  solicitudes : reducers.solicitudesReducer,
+  equipos : reducers.equiposReducer,
+  componentes : reducers.componentesReducer,
+  mantenimientos : reducers.mantenimientosReducer,
+  trabajosNoRutinarios : reducers.trabajosNoRutinariosReducer,
   //FORM REDUCER
   form : formReducer
 })

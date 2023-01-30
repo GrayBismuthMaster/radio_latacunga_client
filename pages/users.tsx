@@ -1,4 +1,4 @@
-import IndexUsers from '../components/Dashboard/Content/Users/Index'
+import IndexUsers from './Users/Index'
 import { Outlet } from 'react-router-dom'
 const users = () => {
     return (

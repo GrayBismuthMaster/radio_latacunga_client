@@ -1,23 +1,23 @@
 import React, { useRef} from 'react';
-import styles from './userStyles/index.module.css';
+import styles from './TrabajoNoRutinarioStyles/index.module.css';
 import {Toaster} from 'react-hot-toast'
-import Modal from '../../../Modal/Modal';
+import Modal from '../../components/Modal/Modal';
 import { useLocation} from 'react-router-dom';
 
 
 //Redux form
 import { connect } from 'react-redux';
-import { users } from '../../../../redux/actions';
+import { trabajosNoRutinarios } from '../../redux/actions';
 import { Field, Form, Formik } from 'formik';
-// import { TableUsers } from '../../../../interfaces';
-const editUser = users.editUser;
+// import { TabletrabajoNoRutinarios } from '../../../../interfaces';
+const editTrabajoNoRutinario = trabajosNoRutinarios.editTrabajoNoRutinario;
 
 
-const EditUser = (props:any) => {
+const EditTrabajoNoRutinario = (props:any) => {
     //const navigate = useNavigate();
     const location = useLocation();
     //const params = useParams();
-    const {_id, nombre, area, email, estado, username, roles} = location.state.datosFila;
+    const {_id, nombre, area, email, estado, TrabajoNoRutinarioname, roles} = location.state.datosFila;
     const componentRef = useRef();
   return(
       <>
@@ -28,19 +28,19 @@ const EditUser = (props:any) => {
                 area ,
                 email ,
                 estado ,
-                username ,
+                TrabajoNoRutinarioname ,
                 pass : ''
             }}
             onSubmit = {(values, )=>{
                 console.log('valores de todo', values)
-                props.editUser( _id ,{...values, roles : roles});
+                props.edittrabajoNoRutinario( _id ,{...values, roles : roles});
                 // resetForm();
             }}
         >
             {
                 ({handleSubmit, values})=>
                 (
-                    <Modal forwardRef={componentRef} title = {'Editar Usuario'} image = {"https://images.pexels.com/photos/3631711/pexels-photo-3631711.jpeg?cs=srgb&dl=pexels-suzy-hazelwood-3631711.jpg&fm=jpg"}>
+                    <Modal forwardRef={componentRef} title = {'Editar Trabajo No Rutinario'} image = {"https://images.pexels.com/photos/3631711/pexels-photo-3631711.jpeg?cs=srgb&dl=pexels-suzy-hazelwood-3631711.jpg&fm=jpg"}>
                         <Form  className={styles.form} onSubmit={handleSubmit}>
                             <div  className={styles.form_container_left_right}>    
                                 <div className={styles.form_container}>
@@ -64,9 +64,9 @@ const EditUser = (props:any) => {
                                             placeholder=""
                                             value={values.nombre}
                                         />
-                                        <label htmlFor="nombre" className={styles.form_label}>Nombres y apellidos de Usuario</label>
+                                        <label htmlFor="nombre" className={styles.form_label}>Nombres y apellidos de Trabajo No Rutinario</label>
                                         <span className={styles.form_line}></span>
-                                        {/* {errors.nombre_user ?? <div className = {notificationStyles.error}>{errors.nombre_user}</div>} */}
+                                        {/* {errors.nombre_TrabajoNoRutinario ?? <div className = {notificationStyles.error}>{errors.nombre_TrabajoNoRutinario}</div>} */}
                                     </div>
                                     <div className={styles.form_group}>
                                         <Field
@@ -95,15 +95,15 @@ const EditUser = (props:any) => {
                                     </div>
                                     <div className={styles.form_group}>
                                         <Field
-                                            name='username'
+                                            name='TrabajoNoRutinarioname'
                                             type="text"
                                             className={styles.form_input}
                                             placeholder=""
-                                            value={values.username}
+                                            value={values.TrabajoNoRutinarioname}
                                         />
-                                        <label htmlFor="username" className={styles.form_label}>Username</label>
+                                        <label htmlFor="TrabajoNoRutinarioname" className={styles.form_label}>trabajoNoRutinarioname</label>
                                         <span className={styles.form_line}></span>
-                                        {/* {errors.usuario ?? <div className = {notificationStyles.error}>{errors.user}</div>} */}
+                                        {/* {errors.usuario ?? <div className = {notificationStyles.error}>{errors.TrabajoNoRutinario}</div>} */}
                                     </div>
 
                                     <div className={styles.form_group}>
@@ -131,5 +131,5 @@ const EditUser = (props:any) => {
 };
 export default connect(
     null, 
-    {editUser}
-)(EditUser)
+    {editTrabajoNoRutinario}
+)(EditTrabajoNoRutinario)

@@ -12,18 +12,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {  green, yellow, red, blue } from '@mui/material/colors';
-import styles from "../../../../styles/tables/tables.module.css"
+import styles from "../../styles/tables/tables.module.css"
 
-import { fetchUsers } from "../../../../redux/actions/users";
+import { fetchComponentes } from "../../redux/actions/componentes";
 import { useLocation, useNavigate } from "react-router-dom";
-import {TableUsers} from '../../../../interfaces'
+import {Componente} from '../../interfaces'
 const useStyles = makeStyles({
   table: {
       minWidth: 650
   }
 });
 
-const ReadUsersList = (props:any) => {
+const ReadComponentesList = (props:any) => {
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,18 +31,18 @@ const ReadUsersList = (props:any) => {
   const [rows, setRows] = useState([])
   // const [keys, setKeys] = useState([])
 useEffect(()=>{
-  props.fetchUsers();
+  props.fetchComponentes();
 },[])
 
   useEffect(() => {
       
-      setRows(props.users);
+      setRows(props.componentes);
       // setKeys(props.keys);
       setDidLoad(true)
     return () => {
       
     }
-  },[didLoad ,JSON.stringify(props.users)])
+  },[didLoad ,JSON.stringify(props.componentes)])
 
   useEffect(()=>{
     return ()=>{
@@ -55,7 +55,7 @@ useEffect(()=>{
   const classes = useStyles();
 
   const requestSearch = (searchedVal:any) => {
-    const filteredRows = props.users.filter((row:any) => {
+    const filteredRows = props.componentes.filter((row:any) => {
       return row.nombre.toLowerCase().includes(searchedVal.toLowerCase());
     });
     setRows(filteredRows);
@@ -103,9 +103,9 @@ useEffect(()=>{
                           elemento !=='createdAt'
                             &&
                           elemento !=='updatedAt'
-                            ).map((key:any)=>{
+                            ).map((key:any, index : number)=>{
                             return (
-                              <TableCell key={key}>{key}</TableCell>
+                              <TableCell key={index}>{key}</TableCell>
                           )})
                 }
                 {
@@ -117,18 +117,20 @@ useEffect(()=>{
               
             {
               //RECORRIDO DE VALORES POR OBJETO
-              Object.values(rows).map((valor:TableUsers, index)=>{
+              Object.values(rows).map((valor:Componente, index)=>{
                 return (
                   <TableRow key={index} >
+                    
                      <TableCell component="th" scope="row">
                        {valor._id}
                      </TableCell>
-                     <TableCell align="right">{valor.nombre}</TableCell>
-                     <TableCell align="right">{valor.estado ? 'activo' : 'inactivo'}</TableCell>
+                     <TableCell align="right">{valor['nombre']}</TableCell>
+                     {/* <TableCell align="right">{valor.estado ? 'activo' : 'inactivo'}</TableCell> */}
                      <TableCell align="right">{valor.area}</TableCell>
-                     <TableCell align="right">{valor.username}</TableCell>
-                     <TableCell align="right">{valor.email}</TableCell>
-                     <TableCell align="right">{valor.roles[0].nombreRol}</TableCell>
+                     {/* <TableCell align="right">{valor.componentename}</TableCell> */}
+                     {/* <TableCell align="right">{valor.email}</TableCell>
+                     <TableCell align="right">{valor.roles[0].nombreRol}</TableCell> */}
+                     
                      <TableCell align="right" >
                       
                         <EditIcon 
@@ -138,10 +140,10 @@ useEffect(()=>{
                                 _id : valor._id, 
                                 nombre : valor.nombre, 
                                 area: valor.area, 
-                                email: valor.email, 
-                                estado : valor.estado, 
-                                roles : valor.roles, 
-                                username : valor.username
+                                // email: valor.email, 
+                                // estado : valor.estado, 
+                                // roles : valor.roles, 
+                                // componentename : valor.componentename
                               }
                             )
                           } 
@@ -183,22 +185,6 @@ useEffect(()=>{
                   </TableRow>
                 )
               })
-              //RECORRIDO POR ARRAY
-
-                // rows.map((row:any) => (
-                //   <TableRow key={row.USER} >
-                //     <TableCell component="th" scope="row">
-                //       {row.ID}
-                //     </TableCell>
-                //     <TableCell align="right">{row.ID_USUARIO}</TableCell>
-                //     <TableCell align="right">{row.USER}</TableCell>
-                //     <TableCell align="right">{row.ROL}</TableCell>
-                //     <TableCell align="right">{row.NOMBRE_USER}</TableCell>
-                //     <TableCell align="right">{row.TELEFONO}</TableCell>
-                //     <TableCell align="right">{row.CORREO}</TableCell>
-                //     <TableCell align="right" ><EditIcon id={JSON.stringify({ID : row.ID, ID_USUARIO : row.ID_USUARIO, USER: row.USER, ROL: row.ROL, NOMBRE_USER : row.NOMBRE_USER, TELEFONO : row.TELEFONO, CORREO : row.CORREO})} sx={{ color: yellow[700] }} className={styles.icon} onClick={(props)=>{editRow(props)}}  />            <DeleteIcon id={JSON.stringify({ID : row.ID, NOMBRE_USER : row.NOMBRE_USER, ID_USUARIO : row.ID_USUARIO})} sx={{ color: red[600] }} className={styles.icon} onClick={(props)=>{deleteRow(props)}}/></TableCell>
-                //   </TableRow>
-                // ))
             }
 
             </TableBody>
@@ -212,28 +198,28 @@ useEffect(()=>{
 }
 
 const mapStateToProps = (state : any) => {
-  const { users } = state;
+  const { componentes } = state;
   //AUTOMATIZACION DE ROWS DE TABLAS
-
     //ACCEDER A LOS NOMBRES DE LAS COLUMNAS
     //CREAMOS UNA VARIABLE GLOBAL PARA EL POSTERIOR ALMACENAMIENTO DE CLAVES
     let keys = {};
       //LE DAMOS BREAK PARA QUE SOLO OBTENGA LOS NOMBRES DE LAS COLUMNAS DE LA PRIMERA FILA
-      for(const user in users){
-        keys = Object.keys(users[user]);
+      for(const componente in componentes){
+        keys = Object.keys(componentes[componente]);
         break;
       }
     //FIN ACCEDER A LOS NOMBRES DE LAS COLUMNAS
     //OBTENEMOS LOS NOMBRES DE LAS COLUMNAS YA QUE ESTA GUARDADO EN UN ARRAY
-      const userKeys = Object.values(keys);
+      const componenteKeys = Object.values(keys);
+      console.log(componenteKeys);
   //FIN AUTOMATIZACION DE ROWS DE TABLAS
   return {
-    users : Object.values(users),
-    keys : userKeys
+    componentes : Object.values(componentes),
+    keys : componenteKeys
   }
 }
 
 export default connect(
   mapStateToProps,
-  {fetchUsers}
-)(ReadUsersList);
+  {fetchComponentes}
+)(ReadComponentesList);

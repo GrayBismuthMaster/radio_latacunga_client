@@ -1,14 +1,14 @@
 import { useState, useRef} from 'react';
 import styles from './userStyles/index.module.css';
 import { Toaster} from 'react-hot-toast'
-import Modal from '../../../Modal/Modal';
+import Modal from '../../components/Modal/Modal';
 import {connect} from 'react-redux'
-import {users} from '../../../../redux/actions/'
+import {users} from '../../redux/actions'
 import { useNavigate } from 'react-router-dom';
 import { Field, Form, Formik } from 'formik';
 import notificationStyles from '../../../../styles/divNotifications/divNotifications.module.css'
-import {useS3Upload} from '../../../../hooks/useS3Upload';
-import RadioLatacungaApi from '../../../../apis/RadioLatacungaApi';
+import {useS3Upload} from '../../hooks/useS3Upload';
+import RadioLatacungaApi from '../../apis/RadioLatacungaApi';
 //Redux form
 const createUser = users.createUser;
 

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import styles from './Navbar.module.css'
-import logoDashboard from '../../../../assets/LogoDermatologiaHG.png'
+import logoDashboard from '../../../../assets/LogoCrop.png'
 import { NotificationsNone, Language, Settings } from '@mui/icons-material';
 //Redux
 import {connect} from 'react-redux'

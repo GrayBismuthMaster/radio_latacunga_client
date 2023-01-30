@@ -111,3 +111,16 @@
     justify-content: center;
     align-items: center;
 }
+.inactive{
+    color : white!important;
+    background-color: firebrick;
+}
+
+.active_row{
+    color : white!important;
+    background-color: green;
+}
+.pending_row {
+    color : white!important;
+    background-color: yellow;
+}
