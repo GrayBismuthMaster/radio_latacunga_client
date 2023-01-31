@@ -10,42 +10,17 @@ import {FieldFormik} from '../../components/FormikFields/FieldFormik'
 import {useS3Upload} from '../../hooks/useS3Upload';
 import RadioLatacungaApi from '../../apis/RadioLatacungaApi';
 import {equiposData} from '../../data/equiposData';
+import Select from 'react-select'
+import { areaData } from '../../data/areaData';
 //Redux form
 const createEquipo = equipos.createEquipo;
 
 const CreateEquipo = (props : any) => {
     
-    //CUSTOM HOOK PARA S3 UPLOAD
-        const { s3State, setS3State, formatFilename, uploadToS3} = useS3Upload();
-    //FIN CUSTOM HOOK
     const navigate = useNavigate();
     const componentRef = useRef();
-    //create ref to store the modal
-    console.log("ref desde create equipo ")
-    console.log(componentRef)
-
-    const [fileName, setFileName] = useState('');
-    //RENDERIZACION IMAGENES
-        const renderImageField = (formikProps:any)=>{
-            return (
-            <>
-                <input id='file' type="file" className={styles.input_photo} onChange={(e)=>singleFileChangedHandler(e, formikProps)}/>
-                <label htmlFor="file" className={styles.input_photo_btn} >Subir</label>
-            </>      
-            )
-        }
-                                                
+    const [area, setArea] = useState<any>(null);                                   
         
-        const singleFileChangedHandler = ( e:any, formikProps : any ) => {
-            // console.log(event.target.files[0]);
-            // setSelectedFile(event.target.files[0]);
-            console.log('props de formik',formikProps);
-            setFileName(e.target.files[0].name);
-            setS3State({...s3State, file : e.target.files[0], name : e.target.files[0].name});
-            formikProps.form.setFieldValue('imagen', e.target.files[0])
-            // input.onChange(e.target.files[0])
-            
-        }; 
     //FIN RENDERIZACION IMAGENES METODOS
     return( 
         <>
@@ -69,7 +44,7 @@ const CreateEquipo = (props : any) => {
                 //  }}
                 onSubmit = {async (values, {resetForm})=>{
                     console.log('valores del form',values);
-                        await props.createEquipo(values);
+                        await props.createEquipo({...values, area : area.value});
                     // console.log((values as any).imagen.type)
                     // RadioLatacungaApi.post('/uploads/signS3',{
                     //     fileName :formatFilename((values as any).imagen.name),
@@ -102,6 +77,14 @@ const CreateEquipo = (props : any) => {
                                                     />
                                                 )
                                             })
+                                        }
+                                        {
+                                            <Select
+                                                defaultValue={area}
+                                                onChange={setArea}
+                                                options={areaData}
+                                                placeholder={'Área'}
+                                            />
                                         }
                                     </div>
                                 </div>

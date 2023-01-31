@@ -89,6 +89,10 @@ const Sidebar = (props:any) => {
                                 <PersonIcon className={styles.sideBarIcon}/>
                                 <NavLink className={activo} to='/profile'>Perfil</NavLink>
                             </li>
+                            <li className={styles.sidebar_list_item}>
+                                <ComputerIcon className={styles.sideBarIcon}/>
+                                <NavLink className={activo} to='/mantenimientos'>Mantenimiento</NavLink>
+                            </li>
                         </ul>
                     </div>
                 </div>

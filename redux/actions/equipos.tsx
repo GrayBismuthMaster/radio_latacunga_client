@@ -11,9 +11,14 @@ export const fetchEquipo = (equipo:any) => async (dispatch:any) =>{
 };
 export const fetchEquipos = () => async (dispatch:any) =>{
     const response = await RadioLatacungaApi.get(`/equipos/`);
+
     dispatch({type: 'FETCH_EQUIPOS', payload: response.data});
 };
 
+export const fetchEquiposByAreaId = (area : string)=> async (dispatch : any)=>{
+    const response = await RadioLatacungaApi.get(`/equipos/area/${area}`);
+    dispatch({type : 'FETCH_EQUIPOS_BY_AREA_ID', payload : response.data});
+}
 export const createEquipo = (formValues: any) => async (dispatch:any) => {
     console.log('valores desde el action')
     console.log(formValues)

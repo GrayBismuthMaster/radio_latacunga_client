@@ -23,11 +23,9 @@ export interface Solicitud {
     hora_regreso : Date;
     tipo_solicitud : TipoSolicitud;
     estado_solicitud : EstadoSolicitud;
-    parte : Array<any>;
+    partes : Array<any>;
     equipo : Equipo;
     usuario : Usuario;
-    mantenimiento : Mantenimiento;
-    componente : Componente;
 }
 export interface Usuario {
     _id : string;
@@ -128,4 +126,13 @@ export enum Prioridad {
     ALTA = 'ALTA',
     MEDIA = 'MEDIA',
     BAJA = 'BAJA'
+}
+export enum Area {
+    EDICION = 'EDICION',
+    SECRETARIA = 'SECRETARIA',
+    GRABACION = 'GRABACION',
+    MASTER_AM = 'MASTER_AM',
+    MASTER_FM = 'MASTER_FM',
+    STREAMING_AUDIO = 'STREAMING_AUDIO',
+    STREAMING_VIDEO = 'STREAMING_VIDEO'
 }

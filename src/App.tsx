@@ -45,6 +45,10 @@ import DeleteTrabajoNoRutinario from "../pages/TrabajosNoRutinarios/DeleteTrabaj
 import Calendario from '../pages/Calendario/Index';
 //FIN CALENDARIO
 import ProtectedRoutes from './ProtectedRoutes'
+
+//USER ROLE
+import Profile from '../pages/Profile/Profile';
+//END USER ROLE
 import ReadMantenimientosList from '../pages/Mantenimientos/ReadMantenimientosList';
 function App() {
   return (
@@ -90,6 +94,7 @@ function App() {
                 {/* CALENDARIO  */}
                 <Route path="/calendario" element = {<Calendario/>} />
                 {/* FIN CALENDARIO  */}
+                <Route path="/profile" element={<Profile/>}/>
           </Route>
         </Routes>
       </Router>

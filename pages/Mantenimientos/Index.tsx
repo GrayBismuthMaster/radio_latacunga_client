@@ -4,7 +4,7 @@ import { useLocation} from "react-router-dom";
 import {connect} from 'react-redux'
 import styles from '../../styles/index.module.css'
 import {Card} from '../../components/Card/Card'
-import {mantenimientoHomeData} from '../../data/mantenimientoHomeData'
+import {mantenimientoHomeData, mantenimientoHomeUserData} from '../../data/mantenimientoHomeData'
 const Index = (props:any) => {
 
     const [prevLocation , setPrevLocation] = useState({});
@@ -33,15 +33,22 @@ const Index = (props:any) => {
             </div>
         )
 
-
-
-
-
     } else {
-        return (
-            <>
-                <div>SOlo permitido para administradores y moderadores</div>
-            </>
+        return(
+            <div className= {styles.container_card}>
+                    {
+                        mantenimientoHomeUserData.map((mantenimientoHome, index)=>(
+                            <Card
+                                title={mantenimientoHome.title}
+                                alt ={mantenimientoHome.alt}
+                                path = {mantenimientoHome.path}
+                                source = {mantenimientoHome.source}
+                                key = {index}
+                            />
+                        ))
+                    }
+                    
+            </div>
         )
     }
 }

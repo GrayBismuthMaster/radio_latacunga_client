@@ -45,15 +45,15 @@ const Index = (props:any) => {
 }
 
 const mapStateToProps = ( state : any )=>{
-    if(state.auth.solicitudData!==null)
+    if(state.auth.userData!==null)
     {
         return {
-            rol : state.auth.solicitudData.datosUsuario.roles[0].nombreRol
+            rol : state.auth.userData.datosUsuario.roles[0].nombreRol
         }
     }else{
         
         return {
-            rol : "solicitud"
+            rol : "user"
         }
     }
 }

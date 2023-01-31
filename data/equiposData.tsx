@@ -36,10 +36,6 @@ export const equiposData = [
         type : 'number'
     },
     {
-        name : 'area',
-        type : 'text'   
-    },
-    {
         name : 'fecha_adquirido',
         type : 'date'
     },

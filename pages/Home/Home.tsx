@@ -148,10 +148,6 @@ const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}
                                 className = {styles.img}
                             />
                         </Link>
-{/*                         
-                        <li></li>
-                        <li></li> */}
-                        
                     </ul>
                 </div>
 

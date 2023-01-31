@@ -6,8 +6,9 @@ interface Props{
     path : string;
     source : string;
     alt : string;
+    children ?: any
 }
-export const Card = ({title, path, source, alt}:Props) => {
+export const Card = ({title, path, source, alt, children}:Props) => {
   return (
     <div className={styles.card}>
         <div
@@ -17,18 +18,20 @@ export const Card = ({title, path, source, alt}:Props) => {
         
         </div>
         <div className={styles.bottom_inside_card}>
-            <ul 
-                className={styles.card_list}
-            >
-                <Link to={path}>
+            
+                <Link
+                        className = {styles.img} to={path}>
                     <img 
                         src = {source}
                         alt = {alt}
                         className = {styles.img}
                     />
                 </Link>
-            </ul>
         </div>
+        
+        {
+            children
+        }
     </div>
   )
 }
