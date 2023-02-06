@@ -2,7 +2,7 @@
 import {useEffect, useState} from 'react'
 import styles from './Home.module.css';
 import {connect} from 'react-redux';
-import { Link} from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {SearchingTable} from '../../components/SearchTable/SearchingTable';
 import { fetchSolicitudes, editSolicitud } from '../../redux/actions/solicitudes';
 import { EstadoSolicitud, Solicitud } from '../../interfaces';
@@ -13,6 +13,8 @@ import { yellow, indigo } from '@material-ui/core/colors';
 import LogoRadio from '../../assets/LogoRadio.jpg'
 
 const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}:any) =>{
+    const navigate = useNavigate();
+    const location = useLocation();
     useEffect(() => {
         fetchSolicitudes();
       return () => {
@@ -21,15 +23,17 @@ const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}
     }, [])
 
     const setApproveRow = (props?:any)=>{
-            let {_id} = JSON.parse(props);
-            console.log(_id);
-            editSolicitud(_id, {estado_solicitud : EstadoSolicitud.APROBADA})
+            // let {_id} = JSON.parse(props);
+            // console.log(_id);
+            
+            navigate('approve', {state : {datosFila: JSON.parse(props), pathname : location.pathname}})
+            // editSolicitud(_id, {estado_solicitud : EstadoSolicitud.APROBADA})
     }
     const setDenyRow = (props?:any)=>{
         
             let {_id} = JSON.parse(props);
             console.log(_id);
-            editSolicitud(_id, {estado_solicitud : EstadoSolicitud.FINALIZADA})
+            editSolicitud(_id, {estado_solicitud : EstadoSolicitud.RECHAZADA})
     }
 
     if(rol === 'admin'){
@@ -92,11 +96,15 @@ const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}
                                         &&
                                     filter !== 'hora_regreso'
                                         &&
-                                    filter !== 'parte'
+                                    filter !== 'partes'
                                         &&
                                     filter !== 'mantenimiento'
                                         &&
                                     filter !== 'componente'
+                                        &&
+                                    filter !== 'fecha_entrega'
+                                        &&
+                                    filter !== 'hora_entrega'
                                         &&
                                     filter !== '__v'
                                 )
@@ -104,7 +112,7 @@ const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}
                             }
                             bodyRows ={
                                 solicitudes.map((solicitud:Solicitud)=>{
-                                    const {_id,area_mantenimiento, equipo, estado_solicitud, usuario, fecha_mantenimiento, tipo_solicitud} = solicitud;
+                                    const {_id,area_mantenimiento, equipo, estado_solicitud, usuario, fecha_hora_solicitud, tipo_solicitud, motivo_mantenimiento, observaciones_mantenimiento} = solicitud;
                                     return {
                                         _id,
                                         area_mantenimiento, 
@@ -112,7 +120,12 @@ const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}
                                         tipo_solicitud,
                                         estado_solicitud,
                                         usuario : usuario.nombre,
-                                        fecha_mantenimiento
+                                        fecha_hora_solicitud : new Date(fecha_hora_solicitud).toLocaleString(),
+                                        motivo_mantenimiento,
+                                        observaciones_mantenimiento,
+                                        email : usuario.email,
+                                        fecha_solicitud : new Date(fecha_hora_solicitud).toLocaleDateString(),
+                                        hora_solicitud : new Date(fecha_hora_solicitud).toLocaleTimeString()
                                     }
                                 })
                             }
@@ -121,16 +134,10 @@ const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}
                             // setDeleteRow = {setDeleteRow}
                             setApproveRow = {setApproveRow}
                             setDenyRow = {setDenyRow}
-                            opciones ={
-                                <>
-                                
-                                </>
-                            }
                         />
                         
                     </div>
                 </div>
-                
         )
     } else {
         console.log("entra con ds")

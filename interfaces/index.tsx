@@ -13,8 +13,7 @@ export interface Rol {
 }
 export interface Solicitud {
     _id : string;
-    fecha_mantenimiento : Date;
-    hora_mantenimiento : Date;
+    fecha_hora_solicitud : Date;
     area_mantenimiento : string;
     motivo_mantenimiento : string;
     observaciones_mantenimiento : string;
@@ -99,7 +98,8 @@ export enum TipoSolicitud {
 export enum EstadoSolicitud {
     APROBADA = 'APROBADA',
     PENDIENTE = 'PENDIENTE',
-    FINALIZADA = 'FINALIZADA'
+    FINALIZADA = 'FINALIZADA',
+    RECHAZADA = 'RECHAZADA'
 }
 export interface TrabajoNoRutinario {
     _id : string;

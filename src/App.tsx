@@ -2,7 +2,10 @@ import './App.css'
 //Index pages
 import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/login";
+//HOME
 import Home from "../pages/home";
+import ApproveRequest from '../pages/Home/ApproveRequest';
+//END HOME 
 //INICIO USERS
 import Users from "../pages/users";
 import CreateUser from "../pages/Users/CreateUser"
@@ -14,6 +17,7 @@ import Solicitudes from "../pages/solicitudes";
 import CreateSolicitud from "../pages/Solicitudes/CreateSolicitud"
 import EditSolicitud from "../pages/Solicitudes/EditSolicitud"
 import DeleteSolicitud from "../pages/Solicitudes/DeleteSolicitud"
+import ApproveSolicitud from '../pages/Solicitudes/ApproveSolicitud'
 //FIN SOLICITUDES
 
 //INICIO EQUIPOS
@@ -59,7 +63,9 @@ function App() {
           <Route path="/" element={<Login />}/>
               {/* PRIVATE ROUTES */}
           <Route element={<ProtectedRoutes/>}>  
-                <Route path="/home" element={<Home/>}/>
+                <Route path="/home/*" element={<Home/>}>
+                  <Route path="approve" element={<ApproveRequest/>}/>
+                </Route>
                 <Route path="/users/*" element={<Users/>}>
                   <Route path="new" element={<CreateUser/>}/>
                   <Route path='edit' element={<EditUser/>}/>
@@ -68,6 +74,7 @@ function App() {
                 <Route path="/solicitudes/*" element={<Solicitudes/>}>
                   <Route path="new" element={<CreateSolicitud/>}/>
                   <Route path='edit' element={<EditSolicitud/>}/>
+                  <Route path='approve' element={<ApproveSolicitud/>}/>
                   <Route path="delete" element={<DeleteSolicitud/>}/>
                 </Route>
                 <Route path="/equipos/*" element={<Equipos/>}>

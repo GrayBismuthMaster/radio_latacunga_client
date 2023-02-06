@@ -23,6 +23,7 @@ export const FieldFormik = ({...props}:any)=>{
                         
                     }
                 placeholder=""
+                
             />
             <label 
                 htmlFor="id"

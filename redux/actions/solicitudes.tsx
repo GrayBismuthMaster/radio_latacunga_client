@@ -21,10 +21,10 @@ export const createSolicitud = (formValues: any) => async (dispatch:any) => {
     await RadioLatacungaApi.post('/solicitudes', formValues)
             .then(res => {
                 console.log('res de crear', res);
-                toast.success('Usuario creado con éxito', {
+                toast.success('Solicitud creada con éxito', {
                     position: 'top-center',
                 });
-                dispatch({type: 'CREATE_SOLICITUD', payload: res.data.datosUsuarioCreado});
+                dispatch({type: 'CREATE_SOLICITUD', payload: res.data});
 
             })
 }
@@ -34,7 +34,7 @@ export const editSolicitud = (solicitudId :any, formValues : any) => async (disp
     await RadioLatacungaApi.put(`/solicitudes/${solicitudId}`, formValues)
         .then(res => {
             console.log(res);
-            toast.success('Usuario editado con éxito', {
+            toast.success('Solicitud editada con éxito', {
                 position: 'top-center',
             });
             console.log("datos nuevos", res.data)

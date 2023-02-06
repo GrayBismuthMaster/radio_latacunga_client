@@ -21,6 +21,7 @@ import { red, yellow, green} from "@mui/material/colors";
 
 import styles from "../../styles/tables/tables.module.css";
 import {formatTitle} from '../../utils/'
+import { EstadoSolicitud } from "../../interfaces";
 const useStyles = makeStyles({
     table: {
         minWidth: 650
@@ -31,27 +32,25 @@ interface Props {
   headerKeys : Array<any>
   bodyRows : Array<any>
   fieldSearch : string
-  opciones : ReactNode
+  children : ReactNode
   setEditRow : (arg0:any)=>any
   setDeleteRow : (arg1:any)=>any
   setApproveRow : (arg0 : any)=>any
   setDenyRow : (arg0 : any) => any
 }
 
-export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, opciones, setEditRow, setDeleteRow, setApproveRow, setDenyRow}:Props) => { 
+export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, children, setEditRow, setDeleteRow, setApproveRow, setDenyRow}:Props) => { 
     
   //STATES DE LA TABLA
     const [rows, setRows] = useState<any>([]);
-
+    const [initialRows , setInitialRows] = useState<any>([]);
     const [didLoad, setDidLoad] = useState(false);
     const [searched, setSearched] = useState("");
 
     const classes = useStyles();
 
-    const [inactive, setInactive] = useState(false);
-
-
     useEffect(() => {
+      setInitialRows(bodyRows);
       setRows(bodyRows);
       setDidLoad(true)
     return () => {
@@ -66,16 +65,22 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, opc
     }
   },[rows])
 
+
     //METODOS DE BUSQUEDA DE LA TABLA
   
-    const requestSearch = (searchedVal:any) => {
+    const requestSearch = (searchedVal:string) => {
       const filteredRows = rows.filter((row:any) => {
         return row[fieldSearch].toLowerCase().includes(searchedVal.toLowerCase());
       });
       setRows(filteredRows);
       console.log('rows filtrado', filteredRows)
+      if(searchedVal.length === 0){
+        console.log('Buscador vacio');
+        console.log(initialRows);
+        setRows(initialRows);
+      }
     };
-  
+    
     const cancelSearch = () => {
       setSearched("");
       requestSearch(searched);
@@ -115,7 +120,7 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, opc
                               headerKeys.map((key:any, index : number)=>{
                                 return (
                                   
-                                  <TableCell className={(valor as any)[`${key}`] === false ? styles.inactive : (valor as any)[`${key}`] === true ? styles.active_row:(valor as any)[`${key}`] === 'APROBADA' ? styles.active_row:(valor as any)[`${key}`] === 'PENDIENTE' ? styles.pending_row:(valor as any)[`${key}`] === 'FINALIZADA' ? styles.inactive:undefined} key={index} align="right">{(valor as any)[`${key}`] === true ? 'ACTIVO' : (valor as any)[`${key}`] === false ? 'INACTIVO' : (valor as any)[`${key}`] }</TableCell>
+                                  <TableCell className={(valor as any)[`${key}`] === false ? styles.inactive : (valor as any)[`${key}`] === true ? styles.active_row:(valor as any)[`${key}`] === 'APROBADA' ? styles.active_row:(valor as any)[`${key}`] === 'PENDIENTE' ? styles.pending_row:(valor as any)[`${key}`] === 'FINALIZADA' ? styles.inactive : (valor as any)[`${key}`] === EstadoSolicitud.RECHAZADA ? styles.rejected_row:undefined} key={index} align="right">{(valor as any)[`${key}`] === true ? 'ACTIVO' : (valor as any)[`${key}`] === false ? 'INACTIVO' : (valor as any)[`${key}`] }</TableCell>
                               )})
                           }
                         {
@@ -200,7 +205,7 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, opc
                                   <></>
                                 }
                                 {
-                                  opciones
+                                  children
                                 }
                           </TableCell>
                           
