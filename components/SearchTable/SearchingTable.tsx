@@ -14,10 +14,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/CheckCircle';
-
 import RemoveIcon from '@mui/icons-material/RemoveCircle';
+import PrintIcon from '@mui/icons-material/Print';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
-import { red, yellow, green} from "@mui/material/colors";
+import { red, yellow, green, common} from "@mui/material/colors";
 
 import styles from "../../styles/tables/tables.module.css";
 import {formatTitle} from '../../utils/'
@@ -33,13 +34,16 @@ interface Props {
   bodyRows : Array<any>
   fieldSearch : string
   children : ReactNode
-  setEditRow : (arg0:any)=>any
+  setEditRow ?: (arg0:any)=>any
   setDeleteRow : (arg1:any)=>any
-  setApproveRow : (arg0 : any)=>any
-  setDenyRow : (arg0 : any) => any
+  setApproveRow ? : (arg0 : any)=>any
+  setDenyRow ?: (arg0 : any) => any
+  setApprovedRow ? : (arg0 : any) => any
+  setPrintRow ? : (arg0 : any) => any
+  setFinishRow  ?: (arg0 : any)=> any
 }
 
-export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, children, setEditRow, setDeleteRow, setApproveRow, setDenyRow}:Props) => { 
+export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, children, setEditRow, setDeleteRow, setApproveRow, setDenyRow, setPrintRow, setFinishRow}:Props) => { 
     
   //STATES DE LA TABLA
     const [rows, setRows] = useState<any>([]);
@@ -87,7 +91,11 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, chi
     };
   
       return(
-        <>
+        <div
+          style={{
+            marginBottom : '2%'
+          }}
+        >
         <Paper>
           <SearchBar
             value={searched}
@@ -120,13 +128,13 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, chi
                               headerKeys.map((key:any, index : number)=>{
                                 return (
                                   
-                                  <TableCell className={(valor as any)[`${key}`] === false ? styles.inactive : (valor as any)[`${key}`] === true ? styles.active_row:(valor as any)[`${key}`] === 'APROBADA' ? styles.active_row:(valor as any)[`${key}`] === 'PENDIENTE' ? styles.pending_row:(valor as any)[`${key}`] === 'FINALIZADA' ? styles.inactive : (valor as any)[`${key}`] === EstadoSolicitud.RECHAZADA ? styles.rejected_row:undefined} key={index} align="right">{(valor as any)[`${key}`] === true ? 'ACTIVO' : (valor as any)[`${key}`] === false ? 'INACTIVO' : (valor as any)[`${key}`] }</TableCell>
+                                  <TableCell className={(valor as any)[`${key}`] === false ? styles.inactive : (valor as any)[`${key}`] === true ? styles.active_row:(valor as any)[`${key}`] === 'APROBADA' ? styles.active_row:(valor as any)[`${key}`] === 'PENDIENTE' ? styles.pending_row:(valor as any)[`${key}`] === 'FINALIZADA' ? styles.inactive : (valor as any)[`${key}`] === EstadoSolicitud.RECHAZADA ? styles.rejected_row:(valor as any)[`${key}`] === EstadoSolicitud.EN_PROCESO ? styles.in_process_row : undefined} key={index} align="right">{(valor as any)[`${key}`] === true ? 'ACTIVO' : (valor as any)[`${key}`] === false ? 'INACTIVO' : (valor as any)[`${key}`] }</TableCell>
                               )})
                           }
                         {
                           <TableCell>
                                 {
-                                  setEditRow
+                                  setEditRow && valor.estado_solicitud !== EstadoSolicitud.APROBADA && valor.estado_solicitud !== EstadoSolicitud.EN_PROCESO && valor.estado_solicitud !== EstadoSolicitud.FINALIZADA 
                                     ?
                                   <EditIcon
                                     id={JSON.stringify(valor)}
@@ -145,7 +153,7 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, chi
                                   <></>
                                 }
                                 {
-                                  setDeleteRow
+                                  setDeleteRow 
                                     ?
                                   <DeleteIcon 
                                     id={JSON.stringify(valor)}
@@ -165,7 +173,7 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, chi
                                   <></>
                                 }
                                  {
-                                  setApproveRow
+                                  setApproveRow && valor.estado_solicitud === EstadoSolicitud.EN_PROCESO 
                                     ?
                                   <CheckIcon
                                     id={JSON.stringify(valor)}
@@ -185,7 +193,7 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, chi
                                   <></>
                                 }
                                 {
-                                  setDenyRow
+                                  setDenyRow  && valor.estado_solicitud !== EstadoSolicitud.APROBADA && valor.estado_solicitud !== EstadoSolicitud.EN_PROCESO && valor.estado_solicitud !== EstadoSolicitud.PENDIENTE && valor.estado_solicitud !== EstadoSolicitud.FINALIZADA
                                     ?
                                   <RemoveIcon
                                     id={JSON.stringify(valor)}
@@ -205,6 +213,46 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, chi
                                   <></>
                                 }
                                 {
+                                  setPrintRow && valor.estado_solicitud === EstadoSolicitud.APROBADA || valor.estado_solicitud === EstadoSolicitud.FINALIZADA
+                                    ?
+                                  <PrintIcon
+                                    id={JSON.stringify(valor)}
+                                    sx={
+                                    { 
+                                        color: green['A700'] 
+                                    }
+                                    } 
+                                    className={styles.icon} 
+                                    onClick={
+                                    (props:any)=>{
+                                      // console.log(props.currentTarget)
+                                        (setPrintRow as any)(props.currentTarget.id)
+                                        }}
+                                  />
+                                    :
+                                  <></>
+                                }
+                                {
+                                  setFinishRow && valor.estado_solicitud === EstadoSolicitud.APROBADA
+                                    ?
+                                  <DoneAllIcon
+                                    id={JSON.stringify(valor)}
+                                    sx={
+                                    { 
+                                        color: common['black'] 
+                                    }
+                                    } 
+                                    className={styles.icon} 
+                                    onClick={
+                                    (props:any)=>{
+                                      console.log(props.currentTarget)
+                                        setFinishRow(props.currentTarget.id)
+                                        }}
+                                  />
+                                    :
+                                  <></>
+                                }
+                                {
                                   children
                                 }
                           </TableCell>
@@ -218,6 +266,6 @@ export const SearchingTable : FC<any> = ({headerKeys, bodyRows, fieldSearch, chi
             </Table>
           </TableContainer>
         </Paper>
-        </>
+        </div>
       )
 }

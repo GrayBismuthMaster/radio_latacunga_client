@@ -1,60 +1,45 @@
-import { useState, useRef} from 'react';
+import { useState, useRef, useEffect} from 'react';
 import styles from './componenteStyles/index.module.css';
 import { Toaster} from 'react-hot-toast'
 import Modal from '../../components/Modal/Modal';
 import {connect} from 'react-redux'
-import {componentes} from '../../redux/actions'
-import { useNavigate } from 'react-router-dom';
+import {createComponente} from '../../redux/actions/componentes'
 import { Field, Form, Formik } from 'formik';
-import notificationStyles from '../../styles/divNotifications/divNotifications.module.css'
-import {useS3Upload} from '../../hooks/useS3Upload';
-import RadioLatacungaApi from '../../apis/RadioLatacungaApi';
+import {FieldFormik} from '../../components/FormikFields/FieldFormik'
+import {componentesData} from '../../data/componentesData';
+import Select from 'react-select'
+import { areaData } from '../../data/areaData';
+import {fetchEquiposByAreaId} from '../../redux/actions/equipos'
+import { Equipo } from '../../interfaces';
 //Redux form
-const createComponente = componentes.createComponente;
 
 const CreateComponente = (props : any) => {
     
-    //CUSTOM HOOK PARA S3 UPLOAD
-        const { s3State, setS3State, formatFilename, uploadToS3} = useS3Upload();
-    //FIN CUSTOM HOOK
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const componentRef = useRef();
-    //create ref to store the modal
-    console.log("ref desde create componente ")
-    console.log(componentRef)
-
-    const [fileName, setFileName] = useState('');
-    //RENDERIZACION IMAGENES
-        const renderImageField = (formikProps:any)=>{
-            return (
-            <>
-                <input id='file' type="file" className={styles.input_photo} onChange={(e)=>singleFileChangedHandler(e, formikProps)}/>
-                <label htmlFor="file" className={styles.input_photo_btn} >Subir</label>
-            </>      
-            )
-        }
-                                                
+    const [area, setArea] = useState<any>(null);                                   
         
-        const singleFileChangedHandler = ( e:any, formikProps : any ) => {
-            // console.log(event.target.files[0]);
-            // setSelectedFile(event.target.files[0]);
-            console.log('props de formik',formikProps);
-            setFileName(e.target.files[0].name);
-            setS3State({...s3State, file : e.target.files[0], name : e.target.files[0].name});
-            formikProps.form.setFieldValue('imagen', e.target.files[0])
-            // input.onChange(e.target.files[0])
-            
-        }; 
+    const [equipos, setEquipos] = useState([]);
+    const [equipo, setEquipo] = useState<any>([]);
+
+    const generarEquiposByArea = (area : any)=>{
+        console.log(area);
+        props.fetchEquiposByAreaId(area);
+        console.log('equipos desde fetch', props)
+    }
+    
+    useEffect(() => {
+        
+        setEquipos(props.equipos);
+      return () => {
+        
+      };
+    }, [props.equipos])
     //FIN RENDERIZACION IMAGENES METODOS
     return( 
         <>
             <Formik
                 initialValues={{
-                    nombre : "",
-                    area : "",
-                    email : '',
-                    componentename : '',
-                    password : '',
                 }}
                 // validate = {(values)=>{
                 //     let errores = {nombre_usuario : '', telefono : '', correo : '', usuario : '', password : ''};
@@ -71,147 +56,68 @@ const CreateComponente = (props : any) => {
                 //     }
                 //     return errores;
                 //  }}
-                onSubmit = {(values, {resetForm})=>{
+                onSubmit = {async (values, {resetForm})=>{
                     console.log('valores del form',values);
-                    console.log((values as any).imagen.type)
-                    RadioLatacungaApi.post('/uploads/signS3',{
-                        fileName :formatFilename((values as any).imagen.name),
-                        fileType : (values as any).imagen.name
-                    }).then(async (res)=>{
-                        console.log("respues",res);
-                        const { signedRequest, url } = res.data;
-                        const resUpload = await uploadToS3((values as any).imagen, signedRequest);
-                        console.log("RESPUESTA DE S3", resUpload, "URL", url);
-                        await props.createComponente({ ... values, imagen : url});
-                    })
-                    // resetForm();
+                    console.log('area', area.value);
+                    console.log('equipo', equipo.value)
+                    await props.createComponente({...values, area : area.value, equipo : equipo.value});
                 }}
             >
                 {
-                    ({handleSubmit, values, setFieldValue})=>
+                    ({handleSubmit})=>
                     (
                        
-                        <Modal forwardRef={componentRef} title = {'Crear Usuario'} image = {'https://images.pexels.com/photos/8978449/pexels-photo-8978449.jpeg?cs=srgb&dl=pexels-meruyert-gonullu-8978449.jpg&fm=jpg'}>
+                        <Modal forwardRef={componentRef} title = {'Crear Componente'} image = {'https://images.pexels.com/photos/8978449/pexels-photo-8978449.jpeg?cs=srgb&dl=pexels-meruyert-gonullu-8978449.jpg&fm=jpg'}>
                             <Form  className={styles.form} onSubmit={handleSubmit}>
                                 <div  className={styles.form_container_left_right}>    
                                     <div className={styles.form_container}>
-                                        <div className={styles.form_group}>
-                                            <Field
-                                                name='nombre'
-                                                type="text"
-                                                className={styles.form_input}
-                                                placeholder=""
-                                                value={values.nombre}
-                                            />
-                                            <label htmlFor="nombre" className={styles.form_label}>Nombres y apellidos de Usuario</label>
-                                            <span className={styles.form_line}></span>
-                                            {/* {errors.nombre_componente ?? <div className = {notificationStyles.error}>{errors.nombre_componente}</div>} */}
-                                        </div>
-                                        <div className={styles.form_group}>
-                                            <Field
-                                                name='area'
-                                                type="text"
-                                                className={styles.form_input}
-                                                placeholder=""
-                                                value={values.area}
-                                            />
-                                            <label htmlFor="area" className={styles.form_label}>Area</label>
-                                            <span className={styles.form_line}></span>
-                                            {/* {errors.telefono ?? <div className = {notificationStyles.error}>{errors.telefono}</div>} */}
-                                        </div>
-                                        <div className={styles.form_group}>
-                                            <Field
-                                                name='componentename'
-                                                type="text"
-                                                className={styles.form_input}
-                                                placeholder=""
-                                                value={values.componentename}
-                                            />
-                                            <label htmlFor="componentename" className={styles.form_label}>Usuario</label>
-                                            <span className={styles.form_line}></span>
-                                            {/* {errors.usuario ?? <div className = {notificationStyles.error}>{errors.componente}</div>} */}
-                                        </div>
-                                        
-                                        <div className={styles.form_group}>
-                                            <Field
-                                                name='email'
-                                                type="email"
-                                                className={styles.form_input}
-                                                placeholder=""
-                                                value={values.email}
-                                            />
-                                            <label htmlFor="email" className={styles.form_label}>Correo</label>
-                                            <span className={styles.form_line}></span>
-                                            
-                                            {/* {errors.correo ?? <div className = {notificationStyles.error}>{errors.correo}</div>} */}
-                                        </div>
-                                        
-                                        {/* CAMPO PARA IMAGENES */}
-                                        <div className={styles.form_group}>
-                                            <div className={styles.container_input_photo}>
-                                                    <label className={styles.label_title_input_photo}>Imagen</label>
-                                                    {
-                                                        fileName ? <label className={styles.label_input_photo}>{fileName}</label>
-                                                        : <label className={styles.label_input_photo}></label>
-                                                    }
-                                                    
-                                                    <Field 
-                                                        name='imagen'
-                                                        component={(e:any)=>renderImageField(e)}
-                                                        type="file"
+                                        {
+                                            componentesData.map((valores:any, index : number)=>{
+                                                return (
+                                                    <FieldFormik
+                                                        key = {index}
+                                                        name = {valores.name}
+                                                        type = {valores.type}
                                                     />
-                                                    {/* <input id="file" className={styles.input_photo} type="file" onChange={singleFileChangedHandler}/> */}
-                                        
-                                            </div>
-                                            {
-                                                /* Método que retorna la url de la imagen 
-                                                <div className="mt-5">
-                                                    <button className="btn btn-info" onClick={singleFileUploadHandler}>Upload!</button>
-                                                </div>
-                                                */
-                                            }
-                                            
-                                        </div>
-                                        {/* FIN CAMPO PARA IMAGENES  */}
-
-                                        <div className={styles.form_group}>
-                                            <Field
-                                                name='password'
-                                                type="password"
-                                                className={styles.form_input}
-                                                placeholder=""
-                                                value={values.password}
+                                                )
+                                            })
+                                        }
+                                        {
+                                            <Select
+                                                defaultValue={area}
+                                                onChange={(e)=>{
+                                                    console.log(e);
+                                                    setArea(e);
+                                                    generarEquiposByArea(e.value);
+                                                }}
+                                                options={areaData}
+                                                placeholder={'Areas'}
                                             />
-                                            <label htmlFor="password" className={styles.form_label}>Password</label>
-                                            <span className={styles.form_line}></span>
-                                            {/* {errors.password ?? <div className = {notificationStyles.error}>{errors.password}</div>} */}
-                                        </div>
-                                        <div className={styles.form_group}>
-                                            <span className={styles.select_label}>Roles</span>
-                                            
-                                            <div className = {styles.checkBoxContainer}>
-                                                <div className= {styles.checkBoxVerticalContainer}>
-                                                    <span>Administrador</span>
-                                                    <span>Usuario</span>
-                                                </div>
-                                                <div className={styles.checkBoxVerticalContainer}>
-                                                <Field
-                                                    name="roles"
-                                                    type="radio"
-                                                    value={"admin"}
-                                                />
-                                                <Field
-                                                    name="roles"
-                                                    type="radio"
-                                                    value={"componente"}
-                                                />
-                                                     
-                                                </div>
-                                            </div> 
-                                        </div>
+                                        }
+                                        {
+                                            equipos.length > 0
+                                            ?
+                                            <Select
+                                                defaultValue={equipo}
+                                                onChange={(e)=>{
+                                                    console.log(e);
+                                                    setEquipo(e);
+
+                                                }}
+                                                options={equipos.map((equipo : Equipo)=>{
+                                                    return {
+                                                        value : equipo._id,
+                                                        label : equipo.nombre
+                                                    }
+                                                })}
+                                                placeholder={'Equipos por area'}
+                                            />
+                                            :
+                                            <></>
+                                        }
                                     </div>
                                 </div>
-                                <input type="submit" className={styles.form_submit} value="Registrarse" />       
+                                <input type="submit" className={styles.form_submit} value="Crear" />       
                             </Form>
                             <Toaster/>                 
                         </Modal>
@@ -221,15 +127,14 @@ const CreateComponente = (props : any) => {
       )
 }
 
-// const formWrapped = reduxForm({
-//     form : 'componenteCreate'
-//   })(CreateComponente)
-
+const mapStateToProps = (state : any)=>{
+    const {equipos} = state;
+    console.log('esado desde create solicitu',state);
+    return {
+        equipos  : Object.values(equipos),
+    }
+}
 export default connect(
-    null,
-    {createComponente}
+    mapStateToProps,
+    {createComponente, fetchEquiposByAreaId }
 )(CreateComponente)
-// export default connect(
-//     null,
-//     {createComponente}
-// )(CreateComponente)

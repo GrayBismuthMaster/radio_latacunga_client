@@ -103,6 +103,8 @@ useEffect(()=>{
                           elemento !=='createdAt'
                             &&
                           elemento !=='updatedAt'
+                            &&
+                          elemento !=='cedula_identidad'
                             ).map((key:any, index : number)=>{
                             return (
                               <TableCell key={index}>{key}</TableCell>

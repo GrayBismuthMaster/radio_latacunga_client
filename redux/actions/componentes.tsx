@@ -13,7 +13,10 @@ export const fetchComponentes = () => async (dispatch:any) =>{
     const response = await RadioLatacungaApi.get(`/componentes/`);
     dispatch({type: 'FETCH_COMPONENTES', payload: response.data});
 };
-
+export const fetchComponentesByEquipoId = (equipoId :any) => async (dispatch:any) =>{
+    const response = await RadioLatacungaApi.get(`/equipos/componentes/${equipoId}`);
+    dispatch({type: 'FETCH_COMPONENTES_BY_EQUIPO_ID', payload: response.data});
+};
 export const createComponente = (formValues: any) => async (dispatch:any) => {
     console.log('valores desde el action')
     console.log(formValues)
@@ -21,10 +24,10 @@ export const createComponente = (formValues: any) => async (dispatch:any) => {
     await RadioLatacungaApi.post('/componentes', formValues)
             .then(res => {
                 console.log('res de crear', res);
-                toast.success('Usuario creado con éxito', {
+                toast.success('Componente creado con éxito', {
                     position: 'top-center',
                 });
-                dispatch({type: 'CREATE_COMPONENTE', payload: res.data.datosUsuarioCreado});
+                dispatch({type: 'CREATE_COMPONENTE', payload: res.data});
 
             })
 }

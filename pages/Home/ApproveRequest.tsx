@@ -46,7 +46,7 @@ const ApproveRequest = ({editSolicitud}:any)=>{
               {
                   ({handleSubmit, values})=>
                   (
-                      <Modal forwardRef={componentRef} title = {'Aprobar Solicitud'} image = {"https://images.pexels.com/photos/3631711/pexels-photo-3631711.jpeg?cs=srgb&dl=pexels-suzy-hazelwood-3631711.jpg&fm=jpg"}>
+                      <Modal forwardRef={componentRef} title = {'Aprobar Solicitud (En proceso)'} image = {"https://images.pexels.com/photos/3631711/pexels-photo-3631711.jpeg?cs=srgb&dl=pexels-suzy-hazelwood-3631711.jpg&fm=jpg"}>
                           <Form  className={styles.form} onSubmit={handleSubmit}>
                               <div  className={styles.form_container_left_right}>    
                                   <div className={styles.form_container}>

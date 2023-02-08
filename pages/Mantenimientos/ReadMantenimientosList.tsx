@@ -61,13 +61,13 @@ useEffect(()=>{
             filter !== '__v'
         )}
           bodyRows = {mantenimientos.map((mantenimiento:Mantenimiento)=>{
-            const {_id,duracion, nombre, actividad, estado,frecuencia,partes,dias_paro} = mantenimiento;
+            const {_id,duracion, nombre, actividad, estado,frecuencia,componente,dias_paro} = mantenimiento;
             return {
                 _id,
                 duracion,
                 nombre, 
                 frecuencia,
-                partes : JSON.stringify(partes),
+                componente : componente.nombre,
                 actividad,
                 estado,
                 dias_paro

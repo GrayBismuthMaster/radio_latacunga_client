@@ -3,26 +3,50 @@ import styles from './mantenimientoStyles/index.module.css';
 import { Toaster} from 'react-hot-toast'
 import Modal from '../../components/Modal/Modal';
 import {connect} from 'react-redux'
-import {mantenimientos} from '../../redux/actions'
+import {createMantenimiento} from '../../redux/actions/mantenimientos'
+import {fetchComponentesByEquipoId} from '../../redux/actions/componentes';
+import {fetchEquiposByAreaId} from '../../redux/actions/equipos'
 import { Form, Formik } from 'formik';
 import {mantenimientosData, mantenimientosCheckboxData} from '../../data/mantenimientosData'
 import { FieldFormik } from '../../components/FormikFields/FieldFormik';
-import { FieldCheckboxFormik } from '../../components/FormikFields/FieldCheckboxFormik';
-
-//Redux form
-const createMantenimiento = mantenimientos.createMantenimiento;
-
+import Select from 'react-select';
+import { areaData } from '../../data/areaData';
+import { Componente, Equipo } from '../../interfaces';
 const CreateMantenimiento = (props : any) => {
     
     const componentRef = useRef();
-    const [checkbox,setCheckbox] = useState([]);
+    const [equipos, setEquipos] = useState([]);
+    const [equipo, setEquipo] = useState<any>([]);
+    
+    const [componentes, setComponentes] = useState([]);
+    const [componente, setComponente] = useState<any>([]);
 
+    const [area, setArea] = useState<any>();
+    
+    const generarEquiposByArea = (area : any)=>{
+        console.log(area);
+        props.fetchEquiposByAreaId(area);
+        console.log('equipos desde fetch', props)
+    }
+    const generarComponentesByEquipo = (equipo : any)=>{
+        console.log(equipo);
+        props.fetchComponentesByEquipoId(equipo);
+        console.log('equipos desde fetch', props)
+    }
     useEffect(() => {
-        console.log('estado checkbox', checkbox)
-        return () => {
+        setEquipos(props.equipos);
+      return () => {
         
       };
-    }, [checkbox])
+    }, [props.equipos])
+
+    useEffect(() => {
+        setComponentes(props.componentes);
+      return () => {
+        
+      };
+    }, [props.componentes])
+
     return( 
         <>
             <Formik
@@ -30,7 +54,8 @@ const CreateMantenimiento = (props : any) => {
                 }}
                 onSubmit = {async (values, {resetForm})=>{
                     console.log('valores del form',values);
-                    await props.createMantenimiento({ ... values, partes : checkbox});
+                    console.log(componente)
+                    await props.createMantenimiento({ ... values,componente});
                    
                 }}
             >
@@ -77,28 +102,57 @@ const CreateMantenimiento = (props : any) => {
                                                 })
                                         }
                                         {
-                                            
-                                            <div
-                                                style={{
-                                                    display : 'flex',
-                                                    flexDirection : 'row',
-                                                    justifyContent :'space-around',
+                                            <Select
+                                                defaultValue={area}
+                                                onChange={(e)=>{
+                                                    console.log(e);
+                                                    setArea(e);
+                                                    generarEquiposByArea(e.value);
                                                 }}
-                                            >
-                                                {
-                                                    mantenimientosCheckboxData.map((valores : any, index : number)=>{
-                                                        return (
-                                                            <FieldCheckboxFormik
-                                                                key = {index}
-                                                                name = {valores.name}
-                                                                type = {valores.type}
-                                                                setCheckbox = {setCheckbox}
-                                                                checkbox = {checkbox}
-                                                            />
-                                                        )
-                                                    })
-                                                }
-                                            </div>
+                                                options={areaData}
+                                                placeholder={'Areas'}
+                                            />
+                                        }
+                                        {
+                                            equipos.length > 0
+                                            ?
+                                            <Select
+                                                defaultValue={equipo}
+                                                onChange={(e)=>{
+                                                    console.log(e);
+                                                    setEquipo(e);
+                                                    generarComponentesByEquipo(e.value);
+                                                }}
+                                                options={equipos.map((equipo : Equipo)=>{
+                                                    return {
+                                                        value : equipo._id,
+                                                        label : equipo.nombre
+                                                    }
+                                                })}
+                                                placeholder={'Equipos por area'}
+                                            />
+                                            :
+                                            <></>
+                                        }
+                                        {
+                                            componentes.length > 0
+                                            ?
+                                            <Select
+                                                defaultValue={componente}
+                                                onChange={(e)=>{
+                                                    console.log(e.value);
+                                                    setComponente(e.value);
+                                                }}
+                                                options={componentes.map((componente : Componente)=>{
+                                                    return {
+                                                        value : componente._id,
+                                                        label : componente.nombre
+                                                    }
+                                                })}
+                                                placeholder={'Componentes por equipo'}
+                                            />
+                                            :
+                                            <></>
                                         }
                                     </div>
                                 </div>
@@ -112,11 +166,15 @@ const CreateMantenimiento = (props : any) => {
       )
 }
 
-// const formWrapped = reduxForm({
-//     form : 'mantenimientoCreate'
-//   })(CreateMantenimiento)
-
+const mapStateToProps = (state : any)=>{
+    const {equipos, componentes} = state;
+    console.log('esado desde create solicitu',state);
+    return {
+        equipos  : Object.values(equipos),
+        componentes : Object.values(componentes)
+    }
+}
 export default connect(
-    null,
-    {createMantenimiento}
+    mapStateToProps,
+    {createMantenimiento, fetchEquiposByAreaId, fetchComponentesByEquipoId }
 )(CreateMantenimiento)

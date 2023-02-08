@@ -6,6 +6,8 @@ export const componentesReducer = (state = {}, action:any) =>{
     switch(action.type){
         case 'FETCH_COMPONENTES':
             return { ...state, ..._.mapKeys(action.payload, '_id')};
+        case 'FETCH_COMPONENTES_BY_EQUIPO_ID':
+        return { ..._.mapKeys(action.payload, '_id')};
         case 'CREATE_COMPONENTE':
             return { ...state, [action.payload._id] : action.payload};
         case 'EDIT_COMPONENTE': 

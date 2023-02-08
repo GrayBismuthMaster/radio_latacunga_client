@@ -128,3 +128,7 @@
     color : white!important;
     background-color: rgba(0,0,0,0.8);
 }
+.in_process_row{
+    color : white!important;
+    background-color: cornflowerblue;
+}

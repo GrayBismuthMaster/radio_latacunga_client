@@ -6,6 +6,12 @@ export const mantenimientoHomeData = [
         alt : 'equipo'
     },
     {
+        title : 'COMPONENTES',
+        path : '/componentes',
+        source : 'https://images.pexels.com/photos/1432675/pexels-photo-1432675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        alt : 'componente'
+    },
+    {
         title : 'PLANES DE MANTENIMIENTO',
         path : '/mantenimientos/show',
         source : 'https://images.pexels.com/photos/3183186/pexels-photo-3183186.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',

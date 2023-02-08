@@ -17,7 +17,11 @@ import Solicitudes from "../pages/solicitudes";
 import CreateSolicitud from "../pages/Solicitudes/CreateSolicitud"
 import EditSolicitud from "../pages/Solicitudes/EditSolicitud"
 import DeleteSolicitud from "../pages/Solicitudes/DeleteSolicitud"
+import InProcessSolicitud from '../pages/Solicitudes/InProcessSolicitud'
 import ApproveSolicitud from '../pages/Solicitudes/ApproveSolicitud'
+import FinishSolicitud from '../pages/Solicitudes/FinishSolicitud'
+import {OrdenMantenimientoReport} from '../pages/Solicitudes/reportes/OrdenMantenimientoReport'
+import {SolicitudFinalizadaReport} from '../pages/Solicitudes/reportes/SolicitudFinalizadaReport';
 //FIN SOLICITUDES
 
 //INICIO EQUIPOS
@@ -74,8 +78,12 @@ function App() {
                 <Route path="/solicitudes/*" element={<Solicitudes/>}>
                   <Route path="new" element={<CreateSolicitud/>}/>
                   <Route path='edit' element={<EditSolicitud/>}/>
+                  <Route path='in_process' element={<InProcessSolicitud/>}/>
                   <Route path='approve' element={<ApproveSolicitud/>}/>
+                  <Route path='finish' element={<FinishSolicitud/>}/>
                   <Route path="delete" element={<DeleteSolicitud/>}/>
+                  <Route path='order_report' element={<OrdenMantenimientoReport/>}/>
+                  <Route path='finish_report' element={<SolicitudFinalizadaReport/>}/>
                 </Route>
                 <Route path="/equipos/*" element={<Equipos/>}>
                   <Route path="new" element={<CreateEquipo/>}/>

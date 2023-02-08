@@ -109,6 +109,18 @@ const CreateUser = (props : any) => {
                                         </div>
                                         <div className={styles.form_group}>
                                             <Field
+                                                name='cedula_identidad'
+                                                type="text"
+                                                className={styles.form_input}
+                                                placeholder=""
+                                                value={values.nombre}
+                                            />
+                                            <label htmlFor="cedula_identidad" className={styles.form_label}>Cedula de Identidad</label>
+                                            <span className={styles.form_line}></span>
+                                            {/* {errors.nombre_user ?? <div className = {notificationStyles.error}>{errors.nombre_user}</div>} */}
+                                        </div>
+                                        <div className={styles.form_group}>
+                                            <Field
                                                 name='area'
                                                 type="text"
                                                 className={styles.form_input}

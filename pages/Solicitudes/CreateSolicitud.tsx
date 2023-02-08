@@ -12,30 +12,31 @@ import {areaData} from '../../data/areaData'
 import { FieldCheckboxFormik } from '../../components/FormikFields/FieldCheckboxFormik';
 import Select from 'react-select'
 import {fetchEquiposByAreaId} from '../../redux/actions/equipos'
-import { Equipo, EstadoSolicitud } from '../../interfaces';
+import {fetchComponentesByEquipoId} from '../../redux/actions/componentes';
+import { Componente, Equipo, EstadoSolicitud } from '../../interfaces';
 import {tipoSolicitudData} from '../../data/tipoSolicitudData';
 //Redux form
 const createSolicitud = solicitudes.createSolicitud;
 
 const CreateSolicitud = (props : any) => {
     const componentRef = useRef();
-    const [partes,setPartes] = useState([]);
     const [area, setArea] = useState<any>();
     const [equipos, setEquipos] = useState([]);
     const [equipo, setEquipo] = useState<any>([]);
     const [tipoSolicitud, setTipoSolicitud] = useState<any>([]);
 
-    useEffect(() => {
-        
-      console.log(props)
-      
-        return () => {
-        
-      };
-    }, [])
+    const [componentes, setComponentes] = useState([]);
+    const [componente, setComponente] = useState<any>([]);
+
     const generarEquiposByArea = (area : any)=>{
         console.log(area);
         props.fetchEquiposByAreaId(area);
+        console.log('equipos desde fetch', props)
+    }
+    
+    const generarComponentesByEquipo = (equipo : any)=>{
+        console.log(equipo);
+        props.fetchComponentesByEquipoId(equipo);
         console.log('equipos desde fetch', props)
     }
     useEffect(() => {
@@ -45,6 +46,13 @@ const CreateSolicitud = (props : any) => {
         
       };
     }, [props.equipos])
+    
+    useEffect(() => {
+        setComponentes(props.componentes);
+      return () => {
+        
+      };
+    }, [props.componentes])
     return( 
         <>
             <Formik
@@ -53,11 +61,11 @@ const CreateSolicitud = (props : any) => {
                 onSubmit = {async (values, {resetForm})=>{
                     console.log('valores del form',values);
                     console.log('area', area)
-                    console.log('partes', partes)
+                    console.log('partes', componente)
                     //Id Usuario
                     const {usuario, email} = props;
                     
-                    await props.createSolicitud({... values,usuario, email, area_mantenimiento : area.value, partes, tipo_solicitud : tipoSolicitud.value, estado_solicitud : EstadoSolicitud.PENDIENTE, equipo : equipo.value });
+                    await props.createSolicitud({... values,usuario, email, area_mantenimiento : area.value, tipo_solicitud : tipoSolicitud.value, estado_solicitud : EstadoSolicitud.PENDIENTE, equipo, componente });
                     // resetForm();
                 }}
             >
@@ -89,30 +97,7 @@ const CreateSolicitud = (props : any) => {
                                                     )
                                                 })
                                             }
-                                        {
-                                            
-                                            <div
-                                                style={{
-                                                    display : 'flex',
-                                                    flexDirection : 'row',
-                                                    justifyContent :'space-around',
-                                                }}
-                                            >
-                                                {
-                                                    mantenimientosCheckboxData.map((valores : any, index : number)=>{
-                                                        return (
-                                                            <FieldCheckboxFormik
-                                                                key = {index}
-                                                                name = {valores.name}
-                                                                type = {valores.type}
-                                                                setCheckbox = {setPartes}
-                                                                checkbox = {partes}
-                                                            />
-                                                        )
-                                                    })
-                                                }
-                                            </div>
-                                        }
+                                        
                                         {
                                             <Select
                                                 defaultValue={area}
@@ -132,8 +117,8 @@ const CreateSolicitud = (props : any) => {
                                                 defaultValue={equipo}
                                                 onChange={(e)=>{
                                                     console.log(e);
-                                                    setEquipo(e);
-
+                                                    setEquipo(e.value);
+                                                    generarComponentesByEquipo(e.value);
                                                 }}
                                                 options={equipos.map((equipo : Equipo)=>{
                                                     return {
@@ -142,6 +127,26 @@ const CreateSolicitud = (props : any) => {
                                                     }
                                                 })}
                                                 placeholder={'Equipos por area'}
+                                            />
+                                            :
+                                            <></>
+                                        }
+                                        {
+                                            componentes.length > 0
+                                            ?
+                                            <Select
+                                                defaultValue={componente}
+                                                onChange={(e)=>{
+                                                    console.log(e.value);
+                                                    setComponente(e.value);
+                                                }}
+                                                options={componentes.map((componente : Componente)=>{
+                                                    return {
+                                                        value : componente._id,
+                                                        label : componente.nombre
+                                                    }
+                                                })}
+                                                placeholder={'Componentes por equipo'}
                                             />
                                             :
                                             <></>
@@ -165,15 +170,16 @@ const CreateSolicitud = (props : any) => {
       )
 }
 const mapStateToProps = (state : any)=>{
-    const {equipos} = state;
+    const {equipos, componentes} = state;
     console.log('esado desde create solicitu',state);
     return {
         usuario : state.auth.userData.datosUsuario._id,
         equipos  : Object.values(equipos),
-        email : state.auth.userData.datosUsuario.email
+        email : state.auth.userData.datosUsuario.email,
+        componentes : Object.values(componentes)
     }
 }
 export default connect(
     mapStateToProps,
-    {createSolicitud, fetchEquiposByAreaId}
+    {createSolicitud, fetchEquiposByAreaId, fetchComponentesByEquipoId }
 )(CreateSolicitud)

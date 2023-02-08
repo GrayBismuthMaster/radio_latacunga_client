@@ -18,17 +18,20 @@ export interface Solicitud {
     motivo_mantenimiento : string;
     observaciones_mantenimiento : string;
     tiempo_duracion : Date;
-    hora_salida : Date;
+    fecha_salida : Date;
+    hora_salida : String;
     hora_regreso : Date;
     tipo_solicitud : TipoSolicitud;
     estado_solicitud : EstadoSolicitud;
-    partes : Array<any>;
+    componente : Componente;
     equipo : Equipo;
     usuario : Usuario;
+    mantenimiento : Mantenimiento
 }
 export interface Usuario {
     _id : string;
     nombre : string;
+    cedula_identidad : string;
     fecha_actual : Date;
     estado : boolean;
     area : string;
@@ -46,15 +49,15 @@ export interface Componente {
     num_serie : string
     fecha_adquirido : Date
     año_componente : string
-    prioridadComponente : string
-    estadoComponente : string
+    prioridad_componente : string
+    estado_componente : string
     equipo : Equipo
 }
 export interface Mantenimiento {
     _id : string;
     nombre : string;
     actividad : string;
-    partes : Array<any>;
+    componente : Componente;
     frecuencia : string;
     prioridad : string;
     responsable : string;
@@ -98,6 +101,7 @@ export enum TipoSolicitud {
 export enum EstadoSolicitud {
     APROBADA = 'APROBADA',
     PENDIENTE = 'PENDIENTE',
+    EN_PROCESO = 'EN_PROCESO',
     FINALIZADA = 'FINALIZADA',
     RECHAZADA = 'RECHAZADA'
 }

@@ -7,27 +7,18 @@ import {Toaster} from 'react-hot-toast'
 
 //Redux form
 import { connect } from 'react-redux';
-import { editSolicitud} from '../../redux/actions/solicitudes';
+import { editSolicitud } from '../../redux/actions/solicitudes';
 import {fetchMantenimientos} from '../../redux/actions/mantenimientos';
 import { Field, Form, Formik } from 'formik';
 import { FieldFormik } from '../../components/FormikFields/FieldFormik';
-import { approveInProcessRequestsData} from '../../data/solicitudesData';
-import { EstadoSolicitud, Mantenimiento, Solicitud } from '../../interfaces';
-import Select from 'react-select';
-interface Props {
-    editSolicitud : (arg0:string, arg1 : any)=>any;
-    fetchMantenimientos : ()=>any;
-    mantenimientos ?: any
-}
-const ApproveSolicitud = ({editSolicitud, fetchMantenimientos, mantenimientos}:Props)=>{
+import { finishRequestsData} from '../../data/solicitudesData';
+import { EstadoSolicitud, Mantenimiento } from '../../interfaces';
+import Select from 'react-select'
+const FinishSolicitud = ({editSolicitud, fetchMantenimientos, mantenimientos}:any)=>{
     const location = useLocation();
-    
-    const [mantenimiento, setMantenimiento]= useState(); 
-
     const componentRef = useRef();
     console.log('Datos gial ',location.state.datosFila);
-    console.log('mantenimiento dentro de solicitudes',mantenimientos)
-    const {_id, area_mantenimiento, equipo, usuario, email, motivo_mantenimiento, fecha_hora_solicitud, observaciones_mantenimiento}= location.state.datosFila;
+    const {_id, area_mantenimiento, equipo, usuario, email, motivo_mantenimiento, fecha_hora_solicitud, observaciones_mantenimiento, fecha_salida, hora_salida}= location.state.datosFila;
     useEffect(()=>{
         fetchMantenimientos();
     },[])
@@ -42,13 +33,15 @@ const ApproveSolicitud = ({editSolicitud, fetchMantenimientos, mantenimientos}:P
                 motivo_mantenimiento,
                 fecha_solicitud : new Date(fecha_hora_solicitud).toLocaleDateString(), 
                 hora_solicitud : new Date(fecha_hora_solicitud).toLocaleTimeString(),
-                observaciones_mantenimiento
+                observaciones_mantenimiento,
+                fecha_salida,
+                hora_salida
               }}
               onSubmit = {(values, )=>{
                   console.log('valores de todo', values)
-                    const { fecha_salida, hora_salida} = (values as any);
+                    // const { fecha_entrega, hora_entrega} = (values as any);
                     console.log('id de valor',_id)
-                  editSolicitud(_id, {estado_solicitud : EstadoSolicitud.APROBADA, fecha_salida, hora_salida, mantenimiento})
+                  editSolicitud(_id, {estado_solicitud : EstadoSolicitud.FINALIZADA})
               }}
           >
               {
@@ -60,7 +53,7 @@ const ApproveSolicitud = ({editSolicitud, fetchMantenimientos, mantenimientos}:P
                                   <div className={styles.form_container}>
                                         <div className={styles.form_group}>
                                             {
-                                                approveInProcessRequestsData.filter((valor)=>valor.name !=='fecha_entrega' && valor.name !== 'hora_entrega').map((valores:any, index : number)=>{
+                                                finishRequestsData.map((valores:any, index : number)=>{
                                                     return (
                                                         <div
                                                             style={{
@@ -76,24 +69,10 @@ const ApproveSolicitud = ({editSolicitud, fetchMantenimientos, mantenimientos}:P
                                                             />
                                                             
                                                         </div>
+                                                        
                                                     )
                                                 })
                                             }  
-                                            
-                                            <Select
-                                                defaultValue={mantenimiento}
-                                                onChange={(e:any)=>{
-                                                    console.log(e);
-                                                    setMantenimiento(e.value);
-                                                }}
-                                                options={mantenimientos.map((equipo : Mantenimiento)=>{
-                                                    return {
-                                                        value : equipo._id,
-                                                        label : equipo.nombre
-                                                    }
-                                                })}
-                                                placeholder={'Planes de Mantenimiento'}
-                                            />
                                         </div>
                                   </div>
                               </div>
@@ -108,13 +87,13 @@ const ApproveSolicitud = ({editSolicitud, fetchMantenimientos, mantenimientos}:P
 }
 
 const mapStateToProps = (state:any)=>{
-    console.log('estado desde solicitud',state);
     const {mantenimientos} = state;
-    return {
+    return{
         mantenimientos : Object.values(mantenimientos)
     }
 }
+
 export default connect(
     mapStateToProps, 
-    { fetchMantenimientos,editSolicitud}
-)(ApproveSolicitud)
+    {editSolicitud, fetchMantenimientos}
+)(FinishSolicitud)

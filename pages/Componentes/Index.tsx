@@ -45,10 +45,10 @@ const Index = (props:any) => {
 }
 
 const mapStateToProps = ( state : any )=>{
-    if(state.auth.componenteData!==null)
+    if(state.auth.userData!==null)
     {
         return {
-            rol : state.auth.componenteData.datosUsuario.roles[0].nombreRol
+            rol : state.auth.userData.datosUsuario.roles[0].nombreRol
         }
     }else{
         
