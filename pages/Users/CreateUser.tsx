@@ -51,6 +51,7 @@ const CreateUser = (props : any) => {
             <Formik
                 initialValues={{
                     nombre : "",
+                    cedula_identidad : "",
                     area : "",
                     email : '',
                     username : '',
@@ -113,7 +114,7 @@ const CreateUser = (props : any) => {
                                                 type="text"
                                                 className={styles.form_input}
                                                 placeholder=""
-                                                value={values.nombre}
+                                                value={values.cedula_identidad}
                                             />
                                             <label htmlFor="cedula_identidad" className={styles.form_label}>Cedula de Identidad</label>
                                             <span className={styles.form_line}></span>

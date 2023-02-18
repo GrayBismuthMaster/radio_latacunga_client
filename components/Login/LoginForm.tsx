@@ -57,7 +57,6 @@ const FormLogin : FC<any|Props> = ({isSignedIn, signIn}) => {
                     <div className={styles.login_container_card}>    
                         <form onSubmit={authentication.bind(undefined)} className={styles.form}>
                             <h2 className={styles.form_title}>Iniciar Sesión</h2>
-                            <p className={styles.form_paragraph}>¿Todavía no tienes una cuenta? click <NavLink to="/register">aquí</NavLink></p>
                             <div className={styles.form_container}>
                                 <div className={styles.form_group}>
                                     <input type="text" id="email" name="email" className={styles.form_input} placeholder=""/>

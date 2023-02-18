@@ -6,6 +6,8 @@ export const solicitudesReducer = (state = {}, action:any) =>{
     switch(action.type){
         case 'FETCH_SOLICITUDES':
             return { ...state, ..._.mapKeys(action.payload, '_id')};
+        case 'FETCH_SOLICITUDES_BY_TYPE':
+            return { ..._.mapKeys(action.payload, '_id')};
         case 'CREATE_SOLICITUD':
             return { ...state, [action.payload._id] : action.payload};
         case 'EDIT_SOLICITUD': 

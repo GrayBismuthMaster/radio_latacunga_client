@@ -4,21 +4,20 @@ import styles from './Home.module.css';
 import {connect} from 'react-redux';
 import { Link, Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {SearchingTable} from '../../components/SearchTable/SearchingTable';
-import { fetchSolicitudes, editSolicitud } from '../../redux/actions/solicitudes';
-import { EstadoSolicitud, Solicitud } from '../../interfaces';
+import { fetchSolicitudesByType, editSolicitud } from '../../redux/actions/solicitudes';
+import { EstadoSolicitud, Solicitud, TipoSolicitud } from '../../interfaces';
 import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 
 import ComputerIcon from '@mui/icons-material/Computer';
 import { yellow, indigo } from '@material-ui/core/colors';
 import LogoRadio from '../../assets/LogoRadio.jpg'
 
-const Home =  ({nombre, rol, fetchSolicitudes, solicitudes, keys, editSolicitud}:any) =>{
+const Home =  ({nombre, rol, fetchSolicitudesByType, solicitudes, keys, editSolicitud}:any) =>{
     const navigate = useNavigate();
     const location = useLocation();
     useEffect(() => {
-        fetchSolicitudes();
+        fetchSolicitudesByType(TipoSolicitud.URGENTE);
       return () => {
-        
       };
     }, [])
 
@@ -168,7 +167,7 @@ const mapStateToProps = (state:any) =>{
     console.log('state con solit', state);
     console.log("state desde home", state.auth.userData.datosUsuario)
 
-     //AUTOMATIZACION DE ROWS DE TABLAS
+    //AUTOMATIZACION DE ROWS DE TABLAS
     //ACCEDER A LOS NOMBRES DE LAS COLUMNAS
     //CREAMOS UNA VARIABLE GLOBAL PARA EL POSTERIOR ALMACENAMIENTO DE CLAVES
     let keys = {};
@@ -204,5 +203,5 @@ const mapStateToProps = (state:any) =>{
 
 export default connect(
     mapStateToProps,
-    {fetchSolicitudes, editSolicitud}
+    {fetchSolicitudesByType, editSolicitud}
 )(Home);

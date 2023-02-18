@@ -13,6 +13,7 @@ const Navbar = (props:any)=> {
     const navigate = useNavigate();
     
     useEffect(() => {
+        console.log('props en navbar',props.userData.datosUsuario.imagen);
         return () => {
         };
     }, [])
@@ -35,7 +36,7 @@ const Navbar = (props:any)=> {
                    <img alt="Logo" src={logoDashboard} className={styles.logoDashboard}></img>
                </div>
                <div className={styles.navBarRight}>
-                   <div className={styles.navBarIconContainer}>
+                   {/* <div className={styles.navBarIconContainer}>
                             <NotificationsNone/>
                             <span className={styles.navBarIconBadge}>5</span>
                    </div>
@@ -46,9 +47,9 @@ const Navbar = (props:any)=> {
                    <div className={styles.navBarIconContainer}>
                             <Settings/>
                             <span className={styles.navBarIconBadge}>5</span>
-                   </div>
+                   </div> */}
                    <li className={styles.navBarIconContainerList}>
-                        <img src={props.googleUserData ? props.googleUserData.image: props.userData.imagen} alt="Imagen de perfil" className={styles.imgUsuario}></img>
+                        <img src={props.userData.datosUsuario.imagen} alt="Imagen de perfil" className={styles.imgUsuario}></img>
                         <ul className={styles.itemsImgUsuario}>
                             <li><a onClick={tocado}>Ver Perfil</a></li>
                             <li><a onClick={cerrarSesion}>Cerrar Sesión</a></li>

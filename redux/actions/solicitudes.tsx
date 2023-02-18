@@ -13,6 +13,10 @@ export const fetchSolicitudes = () => async (dispatch:any) =>{
     const response = await RadioLatacungaApi.get(`/solicitudes/`);
     dispatch({type: 'FETCH_SOLICITUDES', payload: response.data});
 };
+export const fetchSolicitudesByType = (solicitudType : any) => async (dispatch:any) =>{
+    const response = await RadioLatacungaApi.get(`/solicitudes/type/${solicitudType}`);
+    dispatch({type: 'FETCH_SOLICITUDES_BY_TYPE', payload: response.data});
+};
 
 export const createSolicitud = (formValues: any) => async (dispatch:any) => {
     console.log('valores desde el action')

@@ -1,6 +1,5 @@
 import { startTransition, useEffect, useState } from "react";
 import {connect} from 'react-redux';
-import { makeStyles } from "@material-ui/core/styles";
 import { fetchSolicitudes, editSolicitud } from "../../redux/actions/solicitudes";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SearchingTable } from "../../components/SearchTable/SearchingTable";
